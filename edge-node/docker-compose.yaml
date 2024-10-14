@@ -1,7 +1,7 @@
 ---
 services:
   envoy:
-    image: envoyproxy/envoy:v1.20-latest
+    image: envoyproxy/envoy:v1.31-latest
     depends_on:
       - upstream
     command:
@@ -23,4 +23,15 @@ services:
     volumes:
       - ./envoy.yaml:/etc/envoy.yaml
   upstream:
-    image: kennethreitz/httpbin
+    image: alpine/socat:1.7.4.4
+    container_name: socat
+    command: "-d -d -v -d TCP-LISTEN:80,reuseaddr,fork TCP:actual.upstream:3000"
+    expose:
+      - "80"
+    restart: unless-stopped
+  actual.upstream:
+    image: quay.io/3scale/authorino:echo-api
+    environment:
+      PORT: 3000
+    expose:
+      - "3000"

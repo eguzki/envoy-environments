@@ -5,7 +5,7 @@
 ### Running
 
 ```
-docker compose up
+docker compose up --attach envoy
 ```
 
 ### Downstream traffic

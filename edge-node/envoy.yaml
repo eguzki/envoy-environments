@@ -1,7 +1,13 @@
 ---
+admin:
+  address:
+    socket_address:
+      address: 0.0.0.0
+      port_value: 8001
+
 static_resources:
   listeners:
-  - name: main
+  - name: listener_0
     address:
       socket_address:
         address: 0.0.0.0
@@ -12,6 +18,8 @@ static_resources:
           typed_config:
             "@type": type.googleapis.com/envoy.extensions.filters.network.http_connection_manager.v3.HttpConnectionManager
             stat_prefix: ingress_http
+            codec_type: AUTO
+            server_header_transformation: PASS_THROUGH
             use_remote_address: true
             route_config:
               name: local_route
@@ -26,6 +34,8 @@ static_resources:
                         cluster: upstream
             http_filters:
             - name: envoy.filters.http.router
+              typed_config:
+                "@type": type.googleapis.com/envoy.extensions.filters.http.router.v3.Router
   clusters:
     - name: upstream
       connect_timeout: 0.25s
@@ -40,9 +50,3 @@ static_resources:
                 socket_address:
                   address: upstream
                   port_value: 80
-admin:
-  access_log_path: "/dev/null"
-  address:
-    socket_address:
-      address: 0.0.0.0
-      port_value: 8001
