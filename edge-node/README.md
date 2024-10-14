@@ -8,6 +8,12 @@
 docker compose up --attach envoy
 ```
 
+Inspect traffic between Envoy and upstream (echo-api)
+
+```
+docker compose logs -f upstream
+```
+
 ### Downstream traffic
 
 **Upstream** service implemented by [httpbin.org](https://httpbin.org/)
